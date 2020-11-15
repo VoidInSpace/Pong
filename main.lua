@@ -52,7 +52,7 @@ end
 function love.draw()
     push:apply('start')
 
-    love.graphics.clear(40/255, 45/255, 52/255, 1)
+    love.graphics.clear(79/255, 98/255, 122/255, 1)
 
     love.graphics.setFont(scoreFont)
     love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 -50, VIRTUAL_HEIGHT / 3)

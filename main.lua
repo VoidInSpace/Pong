@@ -2,6 +2,7 @@ push = require 'push'
 Class = require 'class'
 
 require 'Paddle'
+require 'Ball'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -40,6 +41,9 @@ function love.load()
 
     player1 = Paddle(10, 30, 5, 20)
     player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT -30, 5, 20)
+
+    ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
+
 end
 
 function love.resize(w, h)
@@ -71,6 +75,24 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
+end
+
+function love.keypressed(key)
+
+    if key == 'escape' then
+ 
+     love.event.quit()
+
+ elseif key == 'enter' or key == 'return' then
+     if gameState == 'start' then
+         gameState = 'play'
+     else
+         gameState = 'start'
+
+     
+         ball:reset()
+     end
+ end
 end
 
 function love.draw()

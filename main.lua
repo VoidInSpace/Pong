@@ -1,11 +1,15 @@
 push = require 'push'
-class = require 'class'
+Class = require 'class'
+
+require 'Paddle'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
+
+PADDLE_SPEED = 200 
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -33,6 +37,9 @@ function love.load()
 
     player1Score = 0
     player2Score = 0
+
+    player1 = Paddle(10, 30, 5, 20)
+    player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT -30, 5, 20)
 end
 
 function love.resize(w, h)
@@ -40,7 +47,24 @@ function love.resize(w, h)
 end
 
 function love.update(dt)
+    if love.keyboard.isDown('w') then
+        player1.dy = -PADDLE_SPEED
+    elseif love.keyboard.isDown('s') then
+        player1.dy = PADDLE_SPEED
+    else
+        player1.dy = 0
+    end
 
+    if love.keyboard.isDown('i') then
+        player2.dy = -PADDLE_SPEED
+    elseif love.keyboard.isDown('k') then
+        player2.dy = PADDLE_SPEED
+    else
+        player2.dy = 0
+    end
+
+    player1:update(dt)
+    player2:update(dt)
 end
 
 function love.keypressed(key)
@@ -58,6 +82,9 @@ function love.draw()
     love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 -50, VIRTUAL_HEIGHT / 3)
     love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
     love.graphics.setFont(smallFont)
+
+    player1:render()
+    player2:render()
 
     displayFPS()
 

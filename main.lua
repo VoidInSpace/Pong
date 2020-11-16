@@ -59,12 +59,16 @@ function love.update(dt)
         player1.dy = 0
     end
 
-    if love.keyboard.isDown('i') then
+    if love.keyboard.isDown('up') then
         player2.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('k') then
+    elseif love.keyboard.isDown('down') then
         player2.dy = PADDLE_SPEED
     else
         player2.dy = 0
+    end
+
+    if gameState == 'play' then
+        ball:update(dt)
     end
 
     player1:update(dt)
@@ -74,25 +78,17 @@ end
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
+    
+    
+    elseif key == 'enter' or key == 'return' then
+        if gameState == 'start' then
+            gameState = 'play'
+        else
+            gameState = 'start'
+            ball:reset()
+        end 
     end
-end
 
-function love.keypressed(key)
-
-    if key == 'escape' then
- 
-     love.event.quit()
-
- elseif key == 'enter' or key == 'return' then
-     if gameState == 'start' then
-         gameState = 'play'
-     else
-         gameState = 'start'
-
-     
-         ball:reset()
-     end
- end
 end
 
 function love.draw()
@@ -107,6 +103,8 @@ function love.draw()
 
     player1:render()
     player2:render()
+
+    ball:render()
 
     displayFPS()
 

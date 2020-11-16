@@ -10,6 +10,9 @@ function Ball:init(x, y, width, height)
     self.dx = math.random(-50, 50)
 end
 
+ 
+    return true
+end
 
 function Ball:reset()
     self.x = VIRTUAL_WIDTH / 2 - 2

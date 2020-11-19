@@ -166,11 +166,8 @@ function love.keypressed(key)
             gameState = 'serve'
 
             ball:reset()
-<<<<<<< HEAD
 
-=======
             
->>>>>>> 5da8fff32c80a4eed167103a2d5d0aaf05ff8cc6
             player1Score = 0
             player2Score = 0
 
@@ -180,14 +177,8 @@ function love.keypressed(key)
             else
                 servingPlayer = 1
             end
-<<<<<<< HEAD
         end 
     end
-=======
-        end
-    end 
-
->>>>>>> 5da8fff32c80a4eed167103a2d5d0aaf05ff8cc6
 end
 
 function love.draw()
@@ -214,7 +205,6 @@ function love.draw()
         love.graphics.printf('Press Enter to restart!', 0, 30, VIRTUAL_WIDTH, 'center')
     end
 
-  
     displayScore()
 
     player1:render()

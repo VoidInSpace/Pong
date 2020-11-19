@@ -96,7 +96,33 @@ function love.update(dt)
             sounds['Explosion']:play()
         end
 
-        --insert score part in here and delete this comment after
+        if ball.x < 0 then
+            servingPlayer = 1
+            player2Score = player2Score + 1
+            sounds['score']:play()
+
+            if player2Score == 10 then
+                winningPlayer = 2
+                gameState = 'done'
+            else
+                gameState = 'serve'
+                
+                ball:reset()
+            end
+        end
+
+        if ball.x > VIRTUAL_WIDTH then
+            servingPlayer = 2
+            player1Score = player1Score + 1
+            sounds['score']:play()
+
+            if player1Score == 10 then
+                winningPlayer = 1
+                gameState = 'done'
+            else
+                gameState = 'serve'
+                ball:reset()
+            end
 
     if love.keyboard.isDown('w') then
         player1.dy = -PADDLE_SPEED
@@ -138,33 +164,74 @@ function love.keypressed(key)
 
             ball:reset()
 
-            --insert score part here and delete this comment after
-        end 
-    end
+            if ball.x < 0 then
+                servingPlayer = 1
+                player2Score = player2Score + 1
+                sounds['score']:play()
+    
+                player1Score = 0
+            player2Score = 0
 
+            if winningPlayer == 1 then
+                servingPlayer = 2
+            else
+                servingPlayer = 1
+            end
+        end
+    end
+    
 end
 
 function love.draw()
     push:apply('start')
 
-    love.graphics.clear(79/255, 98/255, 122/255, 1)
+    love.graphics.clear(40/255, 45/255, 52/255, 255/255)
+    
+    -- render different things depending on which part of the game we're in
+    if gameState == 'start' then
+        
+        love.graphics.setFont(smallFont)
+        love.graphics.printf('Welcome to Pong!', 0, 10, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Press Enter to begin!', 0, 20, VIRTUAL_WIDTH, 'center')
+    elseif gameState == 'serve' then
+        
+        love.graphics.setFont(smallFont)
+        love.graphics.printf('Player ' .. tostring(servingPlayer) .. "'s serve!", 
+            0, 10, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Press Enter to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
+    elseif gameState == 'play' then
+        
+    elseif gameState == 'done' then
+        
+        love.graphics.setFont(largeFont)
+        love.graphics.printf('Player ' .. tostring(winningPlayer) .. ' wins!',
+            0, 10, VIRTUAL_WIDTH, 'center')
+        love.graphics.setFont(smallFont)
+        love.graphics.printf('Press Enter to restart!', 0, 30, VIRTUAL_WIDTH, 'center')
+    end
 
-    love.graphics.setFont(scoreFont)
-    love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 -50, VIRTUAL_HEIGHT / 3)
-    love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
-    love.graphics.setFont(smallFont)
-
+  
+    displayScore()
+    
     player1:render()
     player2:render()
 
     ball:render()
 
+    
     displayFPS()
 
+    
     push:apply('end')
 end
 
---insert function displayScore()
+function displayScore()
+    love.graphics.setFont(scoreFont)
+    love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50,
+        VIRTUAL_HEIGHT / 3)
+    love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30,
+        VIRTUAL_HEIGHT / 3)
+end
 
 function displayFPS()
     love.graphics.setFont(smallFont)

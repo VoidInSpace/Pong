@@ -162,6 +162,11 @@ function love.keypressed(key)
             gameState = 'serve'
         elseif gameState == 'serve' then
             gameState = 'play'
+        elseif gameState == "play" then
+            gameState = 'pause'
+            ball:reset()
+        elseif gameState == 'pause' then
+            gameState = 'serve'
         elseif gameState == 'done' then
             gameState = 'serve'
 
@@ -186,7 +191,6 @@ function love.draw()
 
     love.graphics.clear(79/255, 98/255, 122/255, 1)
 
-    -- render different things depending on which part of the game we're in
     if gameState == 'start' then
         love.graphics.setFont(smallFont)
         love.graphics.printf('Welcome to Pong!', 0, 10, VIRTUAL_WIDTH, 'center')

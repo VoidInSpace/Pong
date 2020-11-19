@@ -163,23 +163,19 @@ function love.keypressed(key)
             gameState = 'serve'
 
             ball:reset()
-
-            if ball.x < 0 then
-                servingPlayer = 1
-                player2Score = player2Score + 1
-                sounds['score']:play()
-    
-                player1Score = 0
+            
+            player1Score = 0
             player2Score = 0
 
+            
             if winningPlayer == 1 then
                 servingPlayer = 2
             else
                 servingPlayer = 1
             end
         end
-    end
-    
+    end 
+
 end
 
 function love.draw()

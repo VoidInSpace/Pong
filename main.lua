@@ -39,11 +39,15 @@ function love.load()
     player1Score = 0
     player2Score = 0
 
+    servingPlayer = 1
+    winningPlayer = 0
+
     player1 = Paddle(10, 30, 5, 20)
     player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT -30, 5, 20)
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
+    gameState = 'start'
 end
 
 function love.resize(w, h)
@@ -60,7 +64,7 @@ function love.update(dt)
         end
     elseif gameState == 'play' then
         if ball:collides(player1) then
-            ball.dx = -ball.dx * 1.03
+            ball.dx = -ball.dx * 1.05
             ball.x = player1.x + 5
 
             if ball.dy < 0 then
@@ -69,10 +73,10 @@ function love.update(dt)
                 ball.dy = math.random(10, 150)
             end
 
-            sounds['Hit_Hurt2']:play()
+            sounds['paddle_hit']:play()
         end
         if ball:collides(player2) then
-            ball.dx = -ball.dx * 1.03
+            ball.dx = -ball.dx * 1.05
             ball.x = player2.x - 4
 
             if ball.dy < 0 then
@@ -81,19 +85,19 @@ function love.update(dt)
                 ball.dy = math.random(10, 150)
             end
 
-            sounds['Hit_Hurt2']:play()
+            sounds['paddle_hit']:play()
         end
 
         if ball.y <= 0 then
             ball.y = 0
             ball.dy = -ball.dy
-            sounds['Explosion']:play()
+            sounds['wall_hit']:play()
         end
 
         if ball.y >= VIRTUAL_HEIGHT - 4 then
             ball.y = VIRTUAL_HEIGHT - 4
             ball.dy = -ball.dy
-            sounds['Explosion']:play()
+            sounds['wall_hit']:play()
         end
 
         if ball.x < 0 then
@@ -123,7 +127,9 @@ function love.update(dt)
                 gameState = 'serve'
                 ball:reset()
             end
-
+        end
+    end
+    
     if love.keyboard.isDown('w') then
         player1.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown('s') then
@@ -151,25 +157,17 @@ end
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
-    
-    
     elseif key == 'enter' or key == 'return' then
         if gameState == 'start' then
             gameState = 'serve'
         elseif gameState == 'serve' then
             gameState = 'play'
         elseif gameState == 'done' then
-            
             gameState = 'serve'
 
             ball:reset()
 
-            if ball.x < 0 then
-                servingPlayer = 1
-                player2Score = player2Score + 1
-                sounds['score']:play()
-    
-                player1Score = 0
+            player1Score = 0
             player2Score = 0
 
             if winningPlayer == 1 then
@@ -177,32 +175,27 @@ function love.keypressed(key)
             else
                 servingPlayer = 1
             end
-        end
+        end 
     end
-    
 end
 
 function love.draw()
     push:apply('start')
 
-    love.graphics.clear(40/255, 45/255, 52/255, 255/255)
-    
+    love.graphics.clear(79/255, 98/255, 122/255, 1)
+
     -- render different things depending on which part of the game we're in
     if gameState == 'start' then
-        
         love.graphics.setFont(smallFont)
         love.graphics.printf('Welcome to Pong!', 0, 10, VIRTUAL_WIDTH, 'center')
         love.graphics.printf('Press Enter to begin!', 0, 20, VIRTUAL_WIDTH, 'center')
     elseif gameState == 'serve' then
-        
         love.graphics.setFont(smallFont)
         love.graphics.printf('Player ' .. tostring(servingPlayer) .. "'s serve!", 
             0, 10, VIRTUAL_WIDTH, 'center')
         love.graphics.printf('Press Enter to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
     elseif gameState == 'play' then
-        
     elseif gameState == 'done' then
-        
         love.graphics.setFont(largeFont)
         love.graphics.printf('Player ' .. tostring(winningPlayer) .. ' wins!',
             0, 10, VIRTUAL_WIDTH, 'center')
@@ -212,15 +205,13 @@ function love.draw()
 
   
     displayScore()
-    
+
     player1:render()
     player2:render()
 
     ball:render()
-
     
     displayFPS()
-
     
     push:apply('end')
 end

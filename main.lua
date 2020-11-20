@@ -10,7 +10,7 @@ WINDOW_HEIGHT = 720
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
-PADDLE_SPEED = 200 
+PADDLE_SPEED = 120 
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -37,13 +37,13 @@ function love.load()
     })
 
     player1Score = 0
-    player2Score = 0
+    botScore = 0
 
     servingPlayer = 1
     winningPlayer = 0
 
     player1 = Paddle(10, 30, 5, 20)
-    player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT -30, 5, 20)
+    bot = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT -30, 5, 20)
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
@@ -75,9 +75,9 @@ function love.update(dt)
 
             sounds['paddle_hit']:play()
         end
-        if ball:collides(player2) then
+        if ball:collides(bot) then
             ball.dx = -ball.dx * 1.05
-            ball.x = player2.x - 4
+            ball.x = bot.x - 4
 
             if ball.dy < 0 then
                 ball.dy = -math.random(10, 150)
@@ -102,10 +102,10 @@ function love.update(dt)
 
         if ball.x < 0 then
             servingPlayer = 1
-            player2Score = player2Score + 1
+            botScore = botScore + 1
             sounds['score']:play()
 
-            if player2Score == 10 then
+            if botScore == 10 then
                 winningPlayer = 2
                 gameState = 'done'
             else
@@ -138,12 +138,16 @@ function love.update(dt)
         player1.dy = 0
     end
 
-    if love.keyboard.isDown('up') then
-        player2.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('down') then
-        player2.dy = PADDLE_SPEED
+    if gameState == 'play' then
+        if ball.y > bot.y and ball.y + ball.height < bot.y  + bot.height then 
+            bot.dy = 0
+        elseif bot.y > ball.y + ball.height then
+            bot.dy = -PADDLE_SPEED
+        elseif bot.y +bot.height < ball.y then
+        bot.dy = PADDLE_SPEED
+        end
     else
-        player2.dy = 0
+        bot.dy = 0
     end
 
     if gameState == 'play' then
@@ -151,7 +155,7 @@ function love.update(dt)
     end
 
     player1:update(dt)
-    player2:update(dt)
+    bot:update(dt)
 end
 
 function love.keypressed(key)
@@ -174,7 +178,7 @@ function love.keypressed(key)
 
             
             player1Score = 0
-            player2Score = 0
+            botScore = 0
 
             
             if winningPlayer == 1 then
@@ -212,7 +216,7 @@ function love.draw()
     displayScore()
 
     player1:render()
-    player2:render()
+    bot:render()
 
     ball:render()
     
@@ -225,7 +229,7 @@ function displayScore()
     love.graphics.setFont(scoreFont)
     love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50,
         VIRTUAL_HEIGHT / 3)
-    love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30,
+    love.graphics.print(tostring(botScore), VIRTUAL_WIDTH / 2 + 30,
         VIRTUAL_HEIGHT / 3)
 end
 

@@ -1,3 +1,5 @@
+-- Author: Colton Ogden
+
 --the word 'require' is used to get the properties of the other files and use
 --it in the main file
 push = require 'push'

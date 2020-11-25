@@ -1,4 +1,5 @@
 -- Author: Colton Ogden
+-- AI implementation by CET3 Game Dev BSCOE 2-6
 
 --the word 'require' is used to get the properties of the other files and use
 --it in the main file
